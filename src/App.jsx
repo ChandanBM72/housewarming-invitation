@@ -2,68 +2,77 @@ import { useEffect, useRef, useState } from "react";
 import "./App.css";
 
 function App() {
-  // =========================
+  const audioRef = useRef(null);
+
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const [wishName, setWishName] = useState("");
+  const [wishMessage, setWishMessage] = useState("");
+
+  // -----------------------------------------
   // COUNTDOWN
-  // =========================
-
-  const getTimeLeft = () => {
-    // September = month 8 because JavaScript months start from 0
-    const target = new Date(2026, 8, 26, 10, 0, 0).getTime();
-    const now = new Date().getTime();
-
-    const difference = target - now;
-
-    if (difference <= 0) {
-      return {
-        days: 0,
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
-      };
-    }
-
-    return {
-      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-      hours: Math.floor(
-        (difference / (1000 * 60 * 60)) % 24
-      ),
-      minutes: Math.floor(
-        (difference / (1000 * 60)) % 60
-      ),
-      seconds: Math.floor(
-        (difference / 1000) % 60
-      ),
-    };
-  };
-
-  const [timeLeft, setTimeLeft] = useState(getTimeLeft());
-
+  // 26 September 2026 - 10:00 AM
+  // -----------------------------------------
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(getTimeLeft());
-    }, 1000);
+    const updateCountdown = () => {
+      const target = new Date(2026, 8, 26, 10, 0, 0).getTime();
+      const now = new Date().getTime();
+      const difference = target - now;
+
+      if (difference <= 0) {
+        setTimeLeft({
+          days: 0,
+          hours: 0,
+          minutes: 0,
+          seconds: 0,
+        });
+        return;
+      }
+
+      setTimeLeft({
+        days: Math.floor(
+          difference / (1000 * 60 * 60 * 24)
+        ),
+        hours: Math.floor(
+          (difference / (1000 * 60 * 60)) % 24
+        ),
+        minutes: Math.floor(
+          (difference / (1000 * 60)) % 60
+        ),
+        seconds: Math.floor(
+          (difference / 1000) % 60
+        ),
+      });
+    };
+
+    updateCountdown();
+
+    const timer = setInterval(updateCountdown, 1000);
 
     return () => clearInterval(timer);
   }, []);
 
-  // =========================
+  // -----------------------------------------
   // MUSIC
-  // =========================
-
-  const audioRef = useRef(null);
-  const [musicPlaying, setMusicPlaying] = useState(false);
-
+  // -----------------------------------------
   const toggleMusic = () => {
     if (!audioRef.current) return;
 
-    if (musicPlaying) {
+    if (isPlaying) {
       audioRef.current.pause();
-      setMusicPlaying(false);
+      setIsPlaying(false);
     } else {
       audioRef.current
         .play()
         .then(() => {
-          setMusicPlaying(true);
+          setIsPlaying(true);
         })
         .catch(() => {
           alert("Please click the music button again to play the music.");
@@ -71,39 +80,31 @@ function App() {
     }
   };
 
-  // =========================
-  // SEND WISHES
-  // =========================
-
-  const [wishName, setWishName] = useState("");
-  const [wishMessage, setWishMessage] = useState("");
-
+  // -----------------------------------------
+  // WISHES
+  // -----------------------------------------
   const sendWish = () => {
     if (!wishName.trim() || !wishMessage.trim()) {
       alert("Please enter your name and wishes.");
       return;
     }
 
-    alert(`Thank you, ${wishName}! ❤️\n\nYour wishes have been received.`);
+    alert(`Thank you ${wishName}! Your wishes have been received ❤️`);
 
     setWishName("");
     setWishMessage("");
   };
 
-  // =========================
-  // CALL BUTTON
-  // =========================
-
-  const dummyNumber = "+91 98765 43210";
-
+  // -----------------------------------------
+  // CALL
+  // -----------------------------------------
   const callNumber = () => {
     window.location.href = "tel:+919876543210";
   };
 
-  // =========================
+  // -----------------------------------------
   // MAPS
-  // =========================
-
+  // -----------------------------------------
   const openMaps = () => {
     window.open(
       "https://www.google.com/maps",
@@ -114,16 +115,14 @@ function App() {
   return (
     <div className="app">
 
-      {/* =========================
-          BACKGROUND MUSIC
-      ========================= */}
+      {/* MUSIC */}
+      <audio
+        ref={audioRef}
+        src="/music.mp3"
+        loop
+      />
 
-      <audio ref={audioRef} src="/music.mp3" loop />
-
-      {/* =========================
-          NAVBAR
-      ========================= */}
-
+      {/* NAVBAR */}
       <nav className="navbar">
         <div className="nav-logo">
           Aaradhya Nilayam
@@ -139,13 +138,12 @@ function App() {
         </div>
       </nav>
 
-      {/* =========================
-          HERO SECTION
-      ========================= */}
-
+      {/* -----------------------------------------
+          HERO
+      ----------------------------------------- */}
       <section className="hero" id="home">
 
-        {/* Top decoration */}
+        {/* TOP GARLAND */}
         <img
           src="/dec3.png"
           alt=""
@@ -155,30 +153,16 @@ function App() {
         <div className="hero-content">
 
           <p className="hero-small">
-            Inviting you to the
+            Inviting you to the House Warming Ceremony of
           </p>
 
           <h1>
-            House Warming
-            <br />
-            Ceremony
+            Aaradhya Nilayam
           </h1>
 
-          <p className="hero-of">
-            of
+          <p className="hero-date">
+            26 &nbsp;|&nbsp; September &nbsp;|&nbsp; 2026
           </p>
-
-          <h2 className="hero-house">
-            Aaradhya Nilayam
-          </h2>
-
-          <div className="hero-date">
-            <span>26</span>
-            <span>|</span>
-            <span>September</span>
-            <span>|</span>
-            <span>2026</span>
-          </div>
 
           <p className="hero-day">
             Saturday
@@ -188,118 +172,116 @@ function App() {
             className="map-button"
             onClick={openMaps}
           >
-            📍 Open in Maps
+            Open in Maps
           </button>
 
         </div>
 
-        {/* Bottom decorations */}
-
+        {/* LEFT DECORATION */}
         <img
           src="/dec1.png"
           alt=""
           className="hero-decoration-image decoration-left"
         />
 
+        {/* CENTER DECORATION */}
         <img
           src="/dec2.png"
           alt=""
           className="hero-decoration-image decoration-middle"
         />
 
+        {/* COW */}
         <img
           src="/cow.png"
-          alt="Cow"
-          className="cow-image"
+          alt=""
+          className="hero-decoration-image cow-image"
         />
 
       </section>
 
-      {/* =========================
-          WELCOME SECTION
-      ========================= */}
-
-      <section className="welcome" id="welcome">
-
+      {/* -----------------------------------------
+          WELCOME / COUNTDOWN
+      ----------------------------------------- */}
+      <section
+        className="welcome"
+        id="welcome"
+      >
         <p className="section-small">
-          With love and happiness
+          Welcome to our home
         </p>
 
         <h2>
-          We Invite You
+          Welcome to our home
         </h2>
-
-        <p className="welcome-text">
-          With immense joy and gratitude, we invite you
-          to be a part of our special day as we celebrate
-          the beginning of a beautiful new chapter in our
-          new home.
-        </p>
-
-        {/* COUNTDOWN */}
 
         <div className="countdown">
 
-          <div className="count-box">
-            <span>{String(timeLeft.days).padStart(2, "0")}</span>
+          <div className="countdown-box">
+            <span>{timeLeft.days}</span>
             <small>Days</small>
           </div>
 
-          <div className="count-box">
-            <span>{String(timeLeft.hours).padStart(2, "0")}</span>
-            <small>Hours</small>
+          <div className="countdown-box">
+            <span>{timeLeft.hours}</span>
+            <small>Hrs</small>
           </div>
 
-          <div className="count-box">
-            <span>{String(timeLeft.minutes).padStart(2, "0")}</span>
-            <small>Minutes</small>
+          <div className="countdown-box">
+            <span>{timeLeft.minutes}</span>
+            <small>Mins</small>
           </div>
 
-          <div className="count-box">
-            <span>{String(timeLeft.seconds).padStart(2, "0")}</span>
-            <small>Seconds</small>
+          <div className="countdown-box">
+            <span>{timeLeft.seconds}</span>
+            <small>Secs</small>
           </div>
 
         </div>
 
+        <div className="welcome-message">
+          “Together with their families, we cordially invite you
+          to celebrate the housewarming.”
+        </div>
+
       </section>
 
-      {/* =========================
-          INVITATION SECTION
-      ========================= */}
-
+      {/* -----------------------------------------
+          INVITATION
+      ----------------------------------------- */}
       <section className="invitation">
 
         <p className="section-small">
-          A new beginning
+          A Special Invitation
         </p>
 
         <h2>
-          You Are Invited
+          With love and blessings
         </h2>
 
-        <div className="invitation-line"></div>
-
-        <p>
-          Your presence will make this auspicious
-          occasion even more special.
+        <p className="invitation-text">
+          We warmly invite you and your family to join us
+          as we celebrate the beginning of a beautiful new
+          chapter in our home.
         </p>
 
-        <p>
-          Come and bless our new home with your
-          love, happiness and good wishes.
+        <p className="invitation-text">
+          Your presence and blessings will make this
+          occasion even more special.
         </p>
 
       </section>
 
-      {/* =========================
-          FAMILY SECTION
-      ========================= */}
-
-      <section className="family" id="family">
+      {/* -----------------------------------------
+          FAMILY
+      ----------------------------------------- */}
+      <section
+        className="family"
+        id="family"
+      >
 
         <p className="section-small">
-          Together with our family
+          Together with our loved ones
         </p>
 
         <h2>
@@ -319,18 +301,19 @@ function App() {
           <div className="family-text">
 
             <h3>
-              With Love From Our Family
+              Family
             </h3>
 
             <p>
-              We are delighted to welcome you to
-              our new home and share this memorable
-              occasion with all our loved ones.
+              A graceful, compassionate soul with a
+              radiant smile, deeply rooted in family
+              values while embracing new dreams.
             </p>
 
             <p>
-              Your blessings and presence mean
-              the world to us.
+              Together, we look forward to celebrating
+              this beautiful occasion with our family,
+              friends and loved ones.
             </p>
 
           </div>
@@ -339,26 +322,27 @@ function App() {
 
       </section>
 
-      {/* =========================
-          SCHEDULE SECTION
-      ========================= */}
-
-      <section className="schedule" id="schedule">
+      {/* -----------------------------------------
+          SCHEDULE
+      ----------------------------------------- */}
+      <section
+        className="schedule"
+        id="schedule"
+      >
 
         <p className="section-small">
-          Save the date
+          Join us on our special day
         </p>
 
         <h2>
-          The Celebration
+          Schedule
         </h2>
 
         <div className="schedule-container">
 
           <div className="schedule-card">
-
-            <div className="schedule-icon">
-              🏠
+            <div className="schedule-time">
+              10:00 AM
             </div>
 
             <h3>
@@ -366,19 +350,15 @@ function App() {
             </h3>
 
             <p>
-              Saturday, 26 September 2026
+              Traditional housewarming ceremony
+              followed by blessings from family
+              and loved ones.
             </p>
-
-            <strong>
-              10:00 AM onwards
-            </strong>
-
           </div>
 
           <div className="schedule-card">
-
-            <div className="schedule-icon">
-              🍽️
+            <div className="schedule-time">
+              12:30 PM
             </div>
 
             <h3>
@@ -386,24 +366,23 @@ function App() {
             </h3>
 
             <p>
-              Saturday, 26 September 2026
+              Please join us for a delicious lunch
+              and celebrate this memorable day
+              together.
             </p>
-
-            <strong>
-              12:30 PM onwards
-            </strong>
-
           </div>
 
         </div>
 
       </section>
 
-      {/* =========================
-          SEND YOUR WISHES
-      ========================= */}
-
-      <section className="wishes" id="wishes">
+      {/* -----------------------------------------
+          WISHES
+      ----------------------------------------- */}
+      <section
+        className="wishes"
+        id="wishes"
+      >
 
         <p className="section-small">
           Share your blessings
@@ -424,17 +403,21 @@ function App() {
             type="text"
             placeholder="Your Name"
             value={wishName}
-            onChange={(e) => setWishName(e.target.value)}
+            onChange={(e) =>
+              setWishName(e.target.value)
+            }
             className="wish-input"
           />
 
           <textarea
             placeholder="Write your wishes..."
             value={wishMessage}
-            onChange={(e) => setWishMessage(e.target.value)}
+            onChange={(e) =>
+              setWishMessage(e.target.value)
+            }
             className="wish-input wish-message"
             rows="5"
-          ></textarea>
+          />
 
           <button
             className="wish-button"
@@ -447,84 +430,88 @@ function App() {
 
       </section>
 
-      {/* =========================
-          LOCATION SECTION
-      ========================= */}
-
-      <section className="location" id="location">
+      {/* -----------------------------------------
+          LOCATION
+      ----------------------------------------- */}
+      <section
+        className="location"
+        id="location"
+      >
 
         <p className="section-small">
-          We look forward to seeing you
+          We would love to have you with us
         </p>
 
         <h2>
           Location
         </h2>
 
-        <p className="location-text">
-          Aaradhya Nilayam
-          <br />
-          Your New Home Address
-        </p>
+        <div className="location-content">
 
-        <button
-          className="map-button"
-          onClick={openMaps}
-        >
-          📍 Get Directions
-        </button>
+          <div className="location-icon">
+            📍
+          </div>
+
+          <p>
+            Aaradhya Nilayam
+          </p>
+
+          <button
+            className="location-button"
+            onClick={openMaps}
+          >
+            Open in Maps
+          </button>
+
+          <button
+            className="contact-button"
+            onClick={callNumber}
+          >
+            Contact Host
+          </button>
+
+        </div>
 
       </section>
 
-      {/* =========================
+      {/* -----------------------------------------
           FOOTER
-      ========================= */}
+      ----------------------------------------- */}
+      <footer className="footer">
 
-      <footer>
+        <p>
+          With love and blessings
+        </p>
 
         <h3>
           Aaradhya Nilayam
         </h3>
 
         <p>
-          House Warming Ceremony
-        </p>
-
-        <p>
           26 September 2026
-        </p>
-
-        <div className="footer-line"></div>
-
-        <p className="footer-small">
-          With love and gratitude ❤️
         </p>
 
       </footer>
 
-      {/* =========================
+      {/* -----------------------------------------
           FLOATING BUTTONS
-      ========================= */}
+      ----------------------------------------- */}
 
-      <div className="floating-buttons">
+      <button
+        className="floating-button call-button"
+        onClick={callNumber}
+        aria-label="Call"
+      >
+        📞
+      </button>
 
-        <button
-          className="floating-button"
-          onClick={callNumber}
-          title={`Call ${dummyNumber}`}
-        >
-          ☎
-        </button>
-
-        <button
-          className="floating-button"
-          onClick={toggleMusic}
-          title={musicPlaying ? "Pause music" : "Play music"}
-        >
-          {musicPlaying ? "🔇" : "🔊"}
-        </button>
-
-      </div>
+      <button
+        className="floating-button music-button"
+        onClick={toggleMusic}
+        aria-label="Music"
+      >
+        {isPlaying ? "🔊" : "🔇"}
+      </button>
 
     </div>
   );
