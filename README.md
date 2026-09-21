@@ -1,16 +1,59 @@
-# React + Vite
+# 🏡 Aaradhya Nilayam — Housewarming Invitation
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern and interactive digital housewarming invitation website built with React.js.
 
-Currently, two official plugins are available:
+## 🌐 Live Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+👉 https://housewarming-invitation-nu.vercel.app
 
-## React Compiler
+## ✨ Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- 🏠 Elegant housewarming invitation design
+- 📱 Responsive design for desktop and mobile
+- ⏳ Live countdown timer
+- 🎵 Background music with play/pause control
+- 👨‍👩‍👧 Family section
+- 📅 Event schedule
+- 💌 Send Your Wishes form
+- 📍 Google Maps integration
+- 📞 Call button
+- 🌿 Traditional decorative elements
+- 🚀 Deployed using Vercel
 
-## Expanding the ESLint configuration
+## 🗓️ Event Details
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+**House Warming Ceremony**
+
+📅 **Date:** 26 September 2026  
+⏰ **Ceremony:** 10:00 AM onwards  
+🍽️ **Lunch:** 12:30 PM onwards
+
+## 🛠️ Technologies Used
+
+- React.js
+- JavaScript
+- HTML5
+- CSS3
+- Vite
+- Vercel
+
+## 📂 Project Structure
+
+```text
+housewarming-invitation/
+├── public/
+│   ├── cow.png
+│   ├── fam.jpg
+│   ├── dec1.png
+│   ├── dec2.png
+│   ├── dec3.png
+│   └── music.mp3
+│
+├── src/
+│   ├── App.jsx
+│   ├── App.css
+│   └── index.css
+│
+├── package.json
+├── vite.config.js
+└── README.md
